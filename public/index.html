@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gravity Todoist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="background-orb orb-one"></div>
+    <div class="background-orb orb-two"></div>
+    <div class="background-orb orb-three"></div>
+
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-wrap">
+          <div class="brand-mark">GT</div>
+          <div>
+            <p class="eyebrow">Dynamic workspace</p>
+            <h1>Gravity Todoist</h1>
+          </div>
+        </div>
+
+        <nav class="side-nav">
+          <button class="nav-item active">Overview</button>
+          <button class="nav-item">Timeline</button>
+          <button class="nav-item">Focus board</button>
+          <button class="nav-item">Analytics</button>
+        </nav>
+
+        <div class="mini-panel">
+          <p class="eyebrow">Sprint pulse</p>
+          <div class="metric-row">
+            <span>Total tasks</span>
+            <strong id="metric-total">0</strong>
+          </div>
+          <div class="metric-row">
+            <span>Urgent</span>
+            <strong id="metric-urgent">0</strong>
+          </div>
+          <div class="metric-row">
+            <span>Next reminder</span>
+            <strong id="metric-next">None</strong>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Momentum dashboard</p>
+            <h2>Personal command center</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="music-toggle" class="secondary-btn">🔊 Ambient sound</button>
+            <button id="notify-btn" class="secondary-btn">🔔 Enable reminders</button>
+            <button id="quick-add-btn" class="primary-btn">+ Quick add</button>
+          </div>
+        </header>
+
+        <section class="overview-grid">
+          <div class="stat-card highlight">
+            <span>Backlog</span>
+            <strong id="stat-backlog">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>In progress</span>
+            <strong id="stat-in-progress">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Review</span>
+            <strong id="stat-review">0</strong>
+          </div>
+          <div class="stat-card">
+            <span>Done</span>
+            <strong id="stat-done">0</strong>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="composer-panel">
+            <div class="panel-header">
+              <h3>Add a task</h3>
+            </div>
+
+            <form id="task-form" class="task-form">
+              <label>
+                <span>Title</span>
+                <input id="task-title" type="text" name="title" placeholder="Plan sprint review" required />
+              </label>
+
+              <label>
+                <span>Description</span>
+                <textarea id="task-description" name="description" rows="3" placeholder="What is the goal and why does it matter?"></textarea>
+              </label>
+
+              <div class="field-row">
+                <label>
+                  <span>Priority</span>
+                  <select id="task-priority" name="priority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span>Owner</span>
+                  <input id="task-assignee" type="text" name="assignee" placeholder="Ava" />
+                </label>
+              </div>
+
+              <div class="field-row">
+                <label>
+                  <span>Due date</span>
+                  <input id="task-due-date" type="date" name="dueDate" />
+                </label>
+
+                <label>
+                  <span>Reminder time</span>
+                  <input id="task-reminder" type="datetime-local" name="reminderTime" />
+                </label>
+              </div>
+
+              <button type="submit" class="primary-btn">Create task</button>
+            </form>
+          </div>
+
+          <div class="board-panel">
+            <div class="panel-header">
+              <h3>Flow board</h3>
+              <div class="search-wrap">
+                <input id="task-search" type="text" placeholder="Search tasks" />
+              </div>
+            </div>
+
+            <div class="board-grid">
+              <section class="board-column" data-status="backlog">
+                <div class="column-header">
+                  <h4>Backlog</h4>
+                  <span id="count-backlog" class="pill">0</span>
+                </div>
+                <div class="task-list" id="backlog-list"></div>
+              </section>
+
+              <section class="board-column" data-status="in_progress">
+                <div class="column-header">
+                  <h4>In progress</h4>
+                  <span id="count-in-progress" class="pill">0</span>
+                </div>
+                <div class="task-list" id="in_progress-list"></div>
+              </section>
+
+              <section class="board-column" data-status="review">
+                <div class="column-header">
+                  <h4>Review</h4>
+                  <span id="count-review" class="pill">0</span>
+                </div>
+                <div class="task-list" id="review-list"></div>
+              </section>
+
+              <section class="board-column" data-status="done">
+                <div class="column-header">
+                  <h4>Done</h4>
+                  <span id="count-done" class="pill">0</span>
+                </div>
+                <div class="task-list" id="done-list"></div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="planner-grid">
+          <div class="planner-panel">
+            <div class="panel-header">
+              <h3>Personal timetable</h3>
+            </div>
+            <div id="timetable-list" class="timetable-list"></div>
+          </div>
+
+          <div class="insights-panel">
+            <div class="panel-header">
+              <h3>Today pulse</h3>
+            </div>
+            <div class="insight-box">
+              <span class="insight-label">Focus</span>
+              <strong id="focus-score">82%</strong>
+            </div>
+            <div class="insight-box">
+              <span class="insight-label">Deadlines</span>
+              <strong id="deadline-count">0 near</strong>
+            </div>
+            <div class="insight-box">
+              <span class="insight-label">Notes</span>
+              <strong>Keep it light and consistent.</strong>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="task-modal" class="task-modal hidden" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal="true"></div>
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="quick-add-title">
+        <div class="modal-header">
+          <h3 id="quick-add-title">Quick add task</h3>
+          <button type="button" class="icon-close" id="close-modal-btn" aria-label="Close">×</button>
+        </div>
+
+        <form id="task-modal-form" class="task-form">
+          <label>
+            <span>Title</span>
+            <input type="text" name="title" placeholder="Review weekly goals" required />
+          </label>
+
+          <label>
+            <span>Description</span>
+            <textarea name="description" rows="3" placeholder="Write a clear task objective"></textarea>
+          </label>
+
+          <div class="field-row">
+            <label>
+              <span>Priority</span>
+              <select name="priority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Owner</span>
+              <input type="text" name="assignee" placeholder="You" />
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label>
+              <span>Due date</span>
+              <input type="date" name="dueDate" />
+            </label>
+
+            <label>
+              <span>Reminder</span>
+              <input type="datetime-local" name="reminderTime" />
+            </label>
+          </div>
+
+          <button type="submit" class="primary-btn">Save task</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="/app.js"></script>
+  </body>
+</html>
